@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+      button {
+        height: 100px;
+      }
+    </style>
+    <title>SHOT TIMER</title>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row text-center">
+        <div class="col-sm-12">
+          <h1>SHOT TIMER</h1>
+        </div>
+      </div>
+
+      <div class="row form-group">
+        <div class="col">
+          <h5>Delay (seconds):</h5>
+        </div>
+
+        <div class="col">
+          <input type="text" class="form-control" id="delay" />
+        </div>
+      </div>
+
+      <div class="row form-group">
+        <div class="col-sm-12">
+          <button type="button" id="go" class="btn btn-success btn-lg btn-block">GO</button>
+        </div>
+      </div>
+
+      <div class="row form-group">
+        <div class="col-sm-12">
+          <button type="button" id="random" class="btn btn-secondary btn-lg btn-block">Random</button>
+        </div>
+      </div>
+
+      <div class="row form-group">
+        <div class="col-sm-12">
+          <button type="button" id="beep" class="btn btn-danger btn-lg btn-block">Beep</button>
+        </div>
+      </div>
+
+      <audio id="audio" src="shotbeep.mp3" type="audio/mpeg" preload="auto"></audio>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        var audio = new Audio("shotbeep.mp3");
+        function beep(counter) {
+          if (counter > 0) {
+            $("#go").text(counter);
+          }
+          var interval = setInterval(function() {
+            counter--;
+            if (counter <= 0) {
+              clearInterval(interval);
+              $("#audio").attr("src", "shotbeep.mp3");
+              audio.load();
+              audio.play();
+              $("#go").text("GO");
+            } else {
+              $("#go").text(counter);
+            }
+          }, 1000);
+        };
+
+        $("#go").click(function() {
+            var number = $("#delay").val();
+            if (number.length > 0) {
+              number = Math.floor(number);
+              setTimeout(beep(number), number * 1000);
+            }
+        });
+
+        $("#random").click(function() {
+          var min = 1
+          var max = 4;
+          var number = Math.floor(Math.random() * (max - min + 1)) + min;
+
+          setTimeout(beep(number), number * 1000);
+        });
+
+        $("#beep").click(function() {
+          audio.load();
+          audio.play();
+        });
+      });
+    </script>
+  </body>
+</html>
