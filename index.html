@@ -88,8 +88,8 @@
         });
 
         $("#random").click(function() {
-          var min = 1
-          var max = 4;
+          var min = 3;
+          var max = 7;
           var number = Math.floor(Math.random() * (max - min + 1)) + min;
 
           setTimeout(beep(number), number * 1000);
