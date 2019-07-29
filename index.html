@@ -32,6 +32,7 @@
 
         <div class="col">
           <input type="text" class="form-control" id="delay" />
+          Loop <input type="checkbox" id="loop" value="" />
         </div>
       </div>
 
@@ -76,8 +77,11 @@
 
         // Countdown from specified seconds
         function countdown(counter, par) {
+          var original = { 'counter': counter, 'par': par };
+
           $("#go").text(counter);
           var interval = setInterval(function() {
+            var loop = $("#loop").is(":checked")
             counter--;
             if (counter <= 0) {
               beep();
@@ -86,8 +90,14 @@
                 par = 0;
                 $("#go").text(counter);
               } else {
-                clearInterval(interval);
-                $("#go").text("GO");
+                if (!loop) {
+                  clearInterval(interval);
+                  $("#go").text("GO");
+                } else {
+                  counter = original['counter'];
+                  par = original['par'];
+                  $("#go").text(counter);
+                }
               }
             } else {
               $("#go").text(counter);
@@ -97,11 +107,11 @@
 
         // Delay specified seconds
         $("#go").click(function() {
-            var number = $("#delay").val();
-            number = Math.floor(number);
-            if (number >= 0) {
-              countdown(number);
-            }
+          var number = $("#delay").val();
+          number = Math.floor(number);
+          if (number >= 0) {
+            countdown(number);
+          }
         });
 
         // Delay between 3 and 7 seconds
