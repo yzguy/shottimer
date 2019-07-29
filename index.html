@@ -8,6 +8,9 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <style>
+      body {
+        background-color: #C0C0C0;
+      }
       button {
         height: 100px;
       }
@@ -39,8 +42,11 @@
       </div>
 
       <div class="row form-group">
-        <div class="col-sm-12">
+        <div class="col-sm-6">
           <button type="button" id="random" class="btn btn-secondary btn-lg btn-block">Random</button>
+        </div>
+        <div class="col-sm-6">
+          <button type="button" id="par" class="btn btn-info btn-lg btn-block">PAR</button>
         </div>
       </div>
 
@@ -60,44 +66,64 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script type="text/javascript">
       $(document).ready(function() {
+        // Play beep
         var audio = new Audio("shotbeep.mp3");
-        function beep(counter) {
-          if (counter > 0) {
-            $("#go").text(counter);
-          }
+        function beep() {
+          $("#audio").attr("src", "shotbeep.mp3");
+          audio.load();
+          audio.play();
+        };
+
+        // Countdown from specified seconds
+        function countdown(counter, par) {
+          $("#go").text(counter);
           var interval = setInterval(function() {
             counter--;
             if (counter <= 0) {
-              clearInterval(interval);
-              $("#audio").attr("src", "shotbeep.mp3");
-              audio.load();
-              audio.play();
-              $("#go").text("GO");
+              beep();
+              if (par > 0) {
+                counter = par;
+                par = 0;
+                $("#go").text(counter);
+              } else {
+                clearInterval(interval);
+                $("#go").text("GO");
+              }
             } else {
               $("#go").text(counter);
             }
           }, 1000);
         };
 
+        // Delay specified seconds
         $("#go").click(function() {
             var number = $("#delay").val();
-            if (number.length > 0) {
-              number = Math.floor(number);
-              setTimeout(beep(number), number * 1000);
+            number = Math.floor(number);
+            if (number >= 0) {
+              countdown(number);
             }
         });
 
+        // Delay between 3 and 7 seconds
         $("#random").click(function() {
           var min = 3;
           var max = 7;
           var number = Math.floor(Math.random() * (max - min + 1)) + min;
-
-          setTimeout(beep(number), number * 1000);
+          countdown(number);
         });
 
+        // Delay 3 seconds, beep, then wait specified delay
+        $("#par").click(function() {
+          var number = $("#delay").val();
+          number = Math.floor(number);
+          if (number >= 0) {
+            done = countdown(3, number);
+          }
+        });
+
+        // Immeadiately beep
         $("#beep").click(function() {
-          audio.load();
-          audio.play();
+          beep();
         });
       });
     </script>
